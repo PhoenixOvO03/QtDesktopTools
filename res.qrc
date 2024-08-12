@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/Qt.png</file>
+        <file>res/close.png</file>
+    </qresource>
+</RCC>
