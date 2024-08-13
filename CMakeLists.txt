@@ -14,9 +14,12 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Quick QuickWidget
 
 set(PROJECT_SOURCES
         main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
+        mainwindow.h mainwindow.cpp mainwindow.ui
+        utils/keyboardlistener.cpp utils/keyboardlistener.h
+)
+
+INCLUDE_DIRECTORIES(
+    ${PROJECT_SOURCE_DIR}
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -25,7 +28,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
         res.qrc
         qml.qrc
-        utils/keyboardlistener.cpp utils/keyboardlistener.h
+        qss.qrc
         README.md
     )
 # Define target properties for Android with Qt 6 as:

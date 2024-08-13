@@ -1,5 +1,9 @@
 <RCC>
     <qresource prefix="/">
         <file>qml/ShowPressedKey.qml</file>
+        <file>qml/KeyListenerSettingPage.qml</file>
+        <file>qml/CheckBtn.qml</file>
+        <file>qml/SliderProgress.qml</file>
+        <file>qml/LineEdit.qml</file>
     </qresource>
 </RCC>

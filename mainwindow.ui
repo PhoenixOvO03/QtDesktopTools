@@ -15,16 +15,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="styleSheet">
-    <string notr="true">QWidget#centralwidget{
-    background-color: qlineargradient(
-        spread:pad,
-        x1:0, y1:0, x2:0, y2:1,
-        stop:0 #c0444444, stop:1 #c0444444);
-    border: 1px solid white;
-    border-color: rgba(255, 255, 255, 128);
-    border-radius: 25px;
-}
-</string>
+    <string notr="true"/>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
@@ -64,18 +55,7 @@
          </size>
         </property>
         <property name="styleSheet">
-         <string notr="true">QPushButton#closeBtn
-{
-    border-image: url(:/res/close.png);
-}
-QPushButton:hover
-{
-    margin:5;
-    background: qradialgradient(
-        cx:0.5, cy:0.5, radius: 0.5,
-        fx:0.5, fy:0.5,
-        stop:0 #80ffffff, stop:1 #00ffffff)
-}</string>
+         <string notr="true"/>
         </property>
         <property name="text">
          <string/>
@@ -85,28 +65,27 @@ QPushButton:hover
      </layout>
     </item>
     <item>
-     <widget class="QPushButton" name="listenKeyBtn">
-      <property name="text">
-       <string>监听按键</string>
+     <widget class="QQuickWidget" name="quickWidget">
+      <property name="resizeMode">
+       <enum>QQuickWidget::ResizeMode::SizeRootObjectToView</enum>
+      </property>
+      <property name="source">
+       <url>
+        <string>qrc:/qml/KeyListenerSettingPage.qml</string>
+       </url>
       </property>
      </widget>
-    </item>
-    <item>
-     <spacer name="verticalSpacer">
-      <property name="orientation">
-       <enum>Qt::Orientation::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>286</height>
-       </size>
-      </property>
-     </spacer>
     </item>
    </layout>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QQuickWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">QtQuickWidgets/QQuickWidget</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

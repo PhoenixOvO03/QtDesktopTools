@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qss/MainWindow.qss</file>
+    </qresource>
+</RCC>

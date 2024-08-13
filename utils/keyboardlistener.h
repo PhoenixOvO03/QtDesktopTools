@@ -21,7 +21,7 @@ public:
     static KeyboardListener *keyboardListener;
 
 signals:
-    void keyPressed(QString pressedKey);
+    void keyPressed(QString topKey, QString bottomKey = "");
 };
 
 #endif // KEYBOARDLISTENER_H

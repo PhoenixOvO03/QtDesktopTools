@@ -38,7 +38,7 @@ LRESULT CALLBACK KeyboardListener::LowLevelKeyboardProc(int nCode, WPARAM wParam
 
                 // qDebug() << code;
 
-                if ((code >= 65 && code <= 90) || (code >= 48 && code <= 57)) // A-Z || 0-9
+                if (code >= 65 && code <= 90) // A-Z
                     emit keyboardListener->keyPressed(QString(char(code)));
                 else if (code >= 112 && code <= 123) // F1-F12
                     emit keyboardListener->keyPressed(QString("F%1").arg(code - 111));
@@ -93,6 +93,39 @@ LRESULT CALLBACK KeyboardListener::LowLevelKeyboardProc(int nCode, WPARAM wParam
                     case 46:
                         emit keyboardListener->keyPressed("Delete");
                         break;
+                    case 48:
+                        emit keyboardListener->keyPressed(")", "0");
+                        break;
+                    case 49:
+                        emit keyboardListener->keyPressed("!", "1");
+                        break;
+                    case 50:
+                        emit keyboardListener->keyPressed("@", "2");
+                        break;
+                    case 51:
+                        emit keyboardListener->keyPressed("#", "3");
+                        break;
+                    case 52:
+                        emit keyboardListener->keyPressed("$", "4");
+                        break;
+                    case 53:
+                        emit keyboardListener->keyPressed("%", "5");
+                        break;
+                    case 54:
+                        emit keyboardListener->keyPressed("^", "6");
+                        break;
+                    case 55:
+                        emit keyboardListener->keyPressed("&", "7");
+                        break;
+                    case 56:
+                        emit keyboardListener->keyPressed("*", "8");
+                        break;
+                    case 57:
+                        emit keyboardListener->keyPressed("(", "9");
+                        break;
+                    case 75:
+                        emit keyboardListener->keyPressed("Delete");
+                        break;
                     case 91:
                     case 92:
                         emit keyboardListener->keyPressed("Win");
@@ -108,6 +141,39 @@ LRESULT CALLBACK KeyboardListener::LowLevelKeyboardProc(int nCode, WPARAM wParam
                     case 164: // 左Alt
                     case 165: // 右Alt
                         emit keyboardListener->keyPressed("Alt");
+                        break;
+                    case 186:
+                        emit keyboardListener->keyPressed(";", ":");
+                        break;
+                    case 187:
+                        emit keyboardListener->keyPressed("=", "+");
+                        break;
+                    case 188:
+                        emit keyboardListener->keyPressed(",", "<");
+                        break;
+                    case 189:
+                        emit keyboardListener->keyPressed("-", "_");
+                        break;
+                    case 190:
+                        emit keyboardListener->keyPressed(".", ">");
+                        break;
+                    case 191:
+                        emit keyboardListener->keyPressed("/", "?");
+                        break;
+                    case 192:
+                        emit keyboardListener->keyPressed("`", "~");
+                        break;
+                    case 219:
+                        emit keyboardListener->keyPressed("[", "{");
+                        break;
+                    case 220:
+                        emit keyboardListener->keyPressed("\\", "|");
+                        break;
+                    case 221:
+                        emit keyboardListener->keyPressed("]", "}");
+                        break;
+                    case 222:
+                        emit keyboardListener->keyPressed("'", "\"");
                         break;
                     default:
                         emit keyboardListener->keyPressed("暂未添加");
