@@ -6,10 +6,20 @@ Window {
     property color backgroundColor: "#80808080"
     property color keyColor: "#80C0C0C0"
     property color textColor: "black"
+    property int stayTime: 3000
+    property int locationIndex: 6
     property ListModel keyArray: ListModel{
         ListElement{
             keyText: "开始"
         }
+    }
+
+    function setStyle(backgroundColor, keyColor, textColor, stayTime, locationIndex){
+        root.backgroundColor = backgroundColor
+        root.keyColor = keyColor
+        root.textColor = textColor
+        root.stayTime = stayTime
+        root.locationIndex = locationIndex
     }
 
     KeyboardListener{
@@ -19,15 +29,18 @@ Window {
         }
     }
 
-    function setStyle(backgroundColor, keyColor, textColor){
-        root.backgroundColor = backgroundColor
-        root.keyColor = keyColor
-        root.textColor = textColor
+    id: root
+    x: {
+        if (locationIndex % 3 === 0) return 100
+        else if (locationIndex % 3 === 1) return Screen.desktopAvailableWidth / 2 - keyArray.count * 50
+        else return Screen.desktopAvailableWidth - 100 - keyArray.count * 100
     }
 
-    id: root
-    x: 100
-    y: Screen.desktopAvailableHeight - 200
+    y: {
+        if (locationIndex / 3 < 1) return 100
+        else if (locationIndex / 3 < 2) return Screen.desktopAvailableHeight / 2
+        else return Screen.desktopAvailableHeight - 200
+    }
     width: 100 * keyArray.count
     height: 100
     flags: Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint
@@ -62,7 +75,7 @@ Window {
                 }
 
                 Timer{
-                    interval: 3000
+                    interval: root.stayTime
                     running: true
                     onTriggered: root.keyArray.remove(index)
                 }

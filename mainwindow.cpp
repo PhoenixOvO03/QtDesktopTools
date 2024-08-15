@@ -13,6 +13,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    setFixedSize(600, 500);
+
     setWindowIcon(QIcon(":/res/Qt.png")); // 任务栏图标
     setWindowFlags(Qt::FramelessWindowHint); // 无边框
     setAttribute(Qt::WA_TranslucentBackground); // 透明

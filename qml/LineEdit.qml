@@ -1,10 +1,7 @@
 import QtQuick
 
 // 单行输入框
-/*
- * 感谢B站用户 C站搜喵呜角角 提出的建议：
- * 右侧的清除按钮在输入后再显示出来
-*/
+
 Rectangle {
     property string content: ""
     onContentChanged: textInput.text = root.content
@@ -27,9 +24,9 @@ Rectangle {
         text: root.content
 
         onTextChanged: {
-            if (text === "") text = "0"
-            if (text > 255) text = 255
-            else if (text < 0) text = 0
+            // if (text === "") text = "0"
+            // if (text > 255) text = 255
+            // else if (text < 0) text = 0
             root.content = text
         }
     }
