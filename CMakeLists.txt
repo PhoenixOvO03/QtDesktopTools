@@ -9,13 +9,15 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Quick QuickWidgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Quick QuickWidgets)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Quick QuickWidgets Network)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Quick QuickWidgets Network)
 
 set(PROJECT_SOURCES
         main.cpp
         mainwindow.h mainwindow.cpp mainwindow.ui
-        utils/keyboardlistener.cpp utils/keyboardlistener.h
+        utils/keyboardlistener.h utils/keyboardlistener.cpp
+        utils/socketlistener.h utils/socketlistener.cpp
+        utils/compositionwindoweffect.h utils/compositionwindoweffect.cpp
 )
 
 INCLUDE_DIRECTORIES(
@@ -49,7 +51,7 @@ else()
     endif()
 endif()
 
-target_link_libraries(QtDesktopTools PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt6::Quick Qt6::QuickWidgets)
+target_link_libraries(QtDesktopTools PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt6::Quick Qt6::QuickWidgets Qt6::Network)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an

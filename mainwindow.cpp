@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include "utils/compositionwindoweffect.h"
 
 #include <QMouseEvent>
 #include <QMenu>
@@ -15,7 +16,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     setFixedSize(600, 500);
 
-    setWindowIcon(QIcon(":/res/Qt.png")); // 任务栏图标
+    setWindowTitle("桌面小工具 - 十_OvO脱发开发中");
+    setWindowIcon(QIcon(":/res/ten_OvO.png")); // 任务栏图标
     setWindowFlags(Qt::FramelessWindowHint); // 无边框
     setAttribute(Qt::WA_TranslucentBackground); // 透明
 
@@ -25,12 +27,17 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->quickWidget->setAttribute(Qt::WA_TranslucentBackground); // 透明窗口
     ui->quickWidget->setClearColor(QColor(Qt::transparent)); // 背景清空
+    ui->quickWidget->setSource(QUrl("qrc:/qml/Main.qml"));
 
     QFile qssFile(":/qss/MainWindow.qss");
     if(qssFile.open(QFile::ReadOnly)){
         setStyleSheet(qssFile.readAll());
     }
     qssFile.close();
+
+    // 毛玻璃效果
+    HWND hwnd = (HWND)this->winId();
+    CompositionWindowEffect::setAreoEffect((HWND)(hwnd));
 }
 
 MainWindow::~MainWindow()
@@ -66,7 +73,15 @@ void MainWindow::trayIconInit()
 
     //创建一个系统托盘
     m_trayIcon = new QSystemTrayIcon(this);
-    m_trayIcon->setIcon(QIcon(":/res/Qt.png"));
+    m_trayIcon->setIcon(QIcon(":/res/ten_OvO.png"));
     m_trayIcon->setContextMenu(trayMenu);
+
+    // 双击托盘图标显示主窗口
+    connect(m_trayIcon, &QSystemTrayIcon::activated, this, [=](QSystemTrayIcon::ActivationReason reason){
+        if (reason == QSystemTrayIcon::DoubleClick) {
+            this->show();
+        }
+    });
+
     m_trayIcon->show();
 }

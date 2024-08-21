@@ -23,12 +23,7 @@ Rectangle {
         clip: true
         text: root.content
 
-        onTextChanged: {
-            // if (text === "") text = "0"
-            // if (text > 255) text = 255
-            // else if (text < 0) text = 0
-            root.content = text
-        }
+        onTextChanged: root.content = text
     }
 
     function getText(){

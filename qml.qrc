@@ -6,5 +6,7 @@
         <file>qml/SliderProgress.qml</file>
         <file>qml/LineEdit.qml</file>
         <file>qml/ClickBtn.qml</file>
+        <file>qml/Main.qml</file>
+        <file>qml/NetworkHelper.qml</file>
     </qresource>
 </RCC>

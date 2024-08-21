@@ -1,6 +1,6 @@
 import QtQuick
 
-Rectangle {
+Item {
     property var showKeyObject: null
     property color backgroundColor: "#80808080"
     property color keyColor: "#80C0C0C0"
@@ -10,7 +10,6 @@ Rectangle {
     property int locationIndex: 6
 
     id: root
-    color: "#c0444444"
 
     function setShowKeyObjectStyle(){
         if (root.showKeyObject !== null)
