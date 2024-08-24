@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>cache/setting.json</file>
+        <file>cache/socket.json</file>
+    </qresource>
+</RCC>

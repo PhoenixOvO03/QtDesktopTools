@@ -18,6 +18,7 @@ set(PROJECT_SOURCES
         utils/keyboardlistener.h utils/keyboardlistener.cpp
         utils/socketlistener.h utils/socketlistener.cpp
         utils/compositionwindoweffect.h utils/compositionwindoweffect.cpp
+        utils/cachemanager.h utils/cachemanager.cpp
 )
 
 INCLUDE_DIRECTORIES(
@@ -31,6 +32,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         res.qrc
         qml.qrc
         qss.qrc
+        cache.qrc
         README.md
     )
 # Define target properties for Android with Qt 6 as:
@@ -64,7 +66,9 @@ set_target_properties(QtDesktopTools PROPERTIES
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
-    WIN32_EXECUTABLE TRUE
+    # 日志打印到控制台 为OFF 取消为ON
+    WIN32_EXECUTABLE ON
+    # WIN32_EXECUTABLE OFF
 )
 
 include(GNUInstallDirs)

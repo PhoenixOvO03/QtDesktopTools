@@ -5,6 +5,20 @@ import QtQuick.Controls.Basic
 import ten.util.SocketListener
 
 Item{
+    signal propChanged(string key, var value)
+
+    property string ip: "127.0.0.1"
+    property int port: 8080
+
+    onIpChanged: setConfig("ip", ip)
+    onPortChanged: setConfig("port", port)
+
+    function setConfig(key, value){
+        ipEdit.content = ip
+        portEdit.content = port
+        propChanged(key, value)
+    }
+
     id: root
 
     SocketListener{
@@ -27,7 +41,7 @@ Item{
                 anchors.verticalCenter: parent.verticalCenter
             }
 
-            ComboBox{
+            ComboBox{ // 类型下拉框
                 id: serverType
                 width: 150
                 height: 40
@@ -54,7 +68,7 @@ Item{
                 }
             }
 
-            ClickBtn{
+            ClickBtn{ // 开始 停止
                 property bool isStart: false
 
                 id: startBtn
@@ -65,7 +79,7 @@ Item{
                 onClicked: {
                     isStart = !isStart
                     if (isStart){
-                        socket.start(serverType.currentIndex, ip.content, port.content)
+                        socket.start(serverType.currentIndex, ipEdit.content, portEdit.content)
                     }else{
                         socket.stop()
                     }
@@ -84,10 +98,11 @@ Item{
             }
 
             LineEdit{
-                id: ip
+                id: ipEdit
                 width: 200
                 height: 40
-                content: "127.0.0.1"
+                content: root.ip
+                onContentChanged: root.ip = content
             }
 
             Text{
@@ -98,10 +113,11 @@ Item{
             }
 
             LineEdit{
-                id: port
+                id: portEdit
                 width: 100
                 height: 40
-                content: "8080"
+                content: root.port
+                onContentChanged: root.port = content
             }
         }
 
@@ -122,6 +138,17 @@ Item{
                 wrapMode: TextArea.Wrap
                 color: "white"
                 readOnly: true
+
+                ClickBtn{
+                    anchors.bottom: parent.bottom
+                    anchors.right: parent.right
+                    anchors.rightMargin: 10
+                    anchors.bottomMargin: 10
+                    width:30
+                    height:30
+                    btnColor: "red"
+                    onClicked: historyArea.text = ""
+                }
             }
         }
 

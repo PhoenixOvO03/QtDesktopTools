@@ -26,6 +26,7 @@ protected:
 
 private:
     void trayIconInit(); // 系统托盘图标初始化
+    void uiInit(); // 初始化界面和UI控件
 
 private:
     Ui::MainWindow *ui;

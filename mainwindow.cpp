@@ -14,30 +14,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    setFixedSize(600, 500);
-
-    setWindowTitle("桌面小工具 - 十_OvO脱发开发中");
-    setWindowIcon(QIcon(":/res/ten_OvO.png")); // 任务栏图标
-    setWindowFlags(Qt::FramelessWindowHint); // 无边框
-    setAttribute(Qt::WA_TranslucentBackground); // 透明
-
     trayIconInit(); // 托盘图标初始化
-
-    connect(ui->closeBtn, &QPushButton::clicked, this, &MainWindow::close);
-
-    ui->quickWidget->setAttribute(Qt::WA_TranslucentBackground); // 透明窗口
-    ui->quickWidget->setClearColor(QColor(Qt::transparent)); // 背景清空
-    ui->quickWidget->setSource(QUrl("qrc:/qml/Main.qml"));
-
-    QFile qssFile(":/qss/MainWindow.qss");
-    if(qssFile.open(QFile::ReadOnly)){
-        setStyleSheet(qssFile.readAll());
-    }
-    qssFile.close();
-
-    // 毛玻璃效果
-    HWND hwnd = (HWND)this->winId();
-    CompositionWindowEffect::setAreoEffect((HWND)(hwnd));
+    uiInit(); // 初始化界面和UI控件
 }
 
 MainWindow::~MainWindow()
@@ -84,4 +62,30 @@ void MainWindow::trayIconInit()
     });
 
     m_trayIcon->show();
+}
+
+void MainWindow::uiInit()
+{
+    setFixedSize(600, 500);
+
+    setWindowTitle("桌面小工具 - 十_OvO脱发开发中");
+    setWindowIcon(QIcon(":/res/ten_OvO.png")); // 任务栏图标
+    setWindowFlags(Qt::FramelessWindowHint); // 无边框
+    setAttribute(Qt::WA_TranslucentBackground); // 透明
+
+    connect(ui->closeBtn, &QPushButton::clicked, this, &MainWindow::close);
+
+    ui->quickWidget->setAttribute(Qt::WA_TranslucentBackground); // 透明窗口
+    ui->quickWidget->setClearColor(QColor(Qt::transparent)); // 背景清空
+    ui->quickWidget->setSource(QUrl("qrc:/qml/Main.qml"));
+
+    QFile qssFile(":/qss/MainWindow.qss");
+    if(qssFile.open(QFile::ReadOnly)){
+        setStyleSheet(qssFile.readAll());
+    }
+    qssFile.close();
+
+    // 毛玻璃效果
+    HWND hwnd = (HWND)this->winId();
+    CompositionWindowEffect::setAreoEffect((HWND)(hwnd));
 }

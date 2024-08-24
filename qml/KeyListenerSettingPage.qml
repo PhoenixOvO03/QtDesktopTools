@@ -1,6 +1,8 @@
 import QtQuick
 
 Item {
+    signal propChanged(string property, var value)
+
     property var showKeyObject: null
     property color backgroundColor: "#80808080"
     property color keyColor: "#80C0C0C0"
@@ -9,12 +11,54 @@ Item {
     property int stayTime: 3000
     property int locationIndex: 6
 
-    id: root
+    // 属性修改信号
+    onBackgroundColorChanged: setProgressBar("backgroundColor", backgroundColor)
+    onKeyColorChanged: setProgressBar("keyColor", keyColor)
+    onTextColorChanged: setProgressBar("textColor", textColor)
+    onStayTimeChanged: setProgressBar("stayTime", stayTime)
+    onLocationIndexChanged: setProgressBar("locationIndex", locationIndex)
+
+    function setProgressBar(key, value){
+        propChanged(key, value)
+        if (key === "stayTime"){
+            timeSlider.value = value
+            return
+        }
+        if (colorIndex === 0){
+            keyBtn.isChecked = false
+            textBtn.isChecked = false
+            root.colorIndex = 0
+            redSlider.value = root.backgroundColor.r * 255
+            greenSlider.value = root.backgroundColor.g * 255
+            blueSlider.value = root.backgroundColor.b * 255
+            alphaSlider.value = root.backgroundColor.a * 255
+        }
+        if (colorIndex === 1){
+            backBtn.isChecked = false
+            textBtn.isChecked = false
+            root.colorIndex = 1
+            redSlider.value = root.keyColor.r * 255
+            greenSlider.value = root.keyColor.g * 255
+            blueSlider.value = root.keyColor.b * 255
+            alphaSlider.value = root.keyColor.a * 255
+        }
+        if (colorIndex === 2){
+            backBtn.isChecked = false
+            keyBtn.isChecked = false
+            root.colorIndex = 2
+            redSlider.value = root.textColor.r * 255
+            greenSlider.value = root.textColor.g * 255
+            blueSlider.value = root.textColor.b * 255
+            alphaSlider.value = root.textColor.a * 255
+        }
+    }
 
     function setShowKeyObjectStyle(){
         if (root.showKeyObject !== null)
             root.showKeyObject.setStyle(root.backgroundColor, root.keyColor, root.textColor, root.stayTime, root.locationIndex)
     }
+
+    id: root
 
     Column{
         spacing: 20

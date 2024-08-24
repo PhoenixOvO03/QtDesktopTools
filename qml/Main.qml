@@ -1,11 +1,30 @@
 
 import QtQuick
 
+import ten.util.CacheManager
+
 Rectangle{
     property int pageIndex: 0
 
     id: root
     color: "#c0444444"
+
+    Component.onCompleted: {
+        var settingCache = cacheManager.settingCache()
+        keyListenerSettingPage.backgroundColor = settingCache['backgroundColor']
+        keyListenerSettingPage.keyColor =  settingCache['keyColor']
+        keyListenerSettingPage.textColor = settingCache['textColor']
+        keyListenerSettingPage.stayTime = settingCache['stayTime']
+        keyListenerSettingPage.locationIndex = settingCache['locationIndex']
+
+        var socketCache = cacheManager.socketCache()
+        networkHelper.ip = socketCache['ip']
+        networkHelper.port = socketCache['port']
+    }
+
+    CacheManager{
+        id: cacheManager
+    }
 
     Rectangle{
         id: sidebar
@@ -73,20 +92,28 @@ Rectangle{
     }
 
     KeyListenerSettingPage{
+        id: keyListenerSettingPage
         anchors.leftMargin: 20
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.left: sidebar.right
         anchors.right: parent.right
         visible: root.pageIndex === 0
+        onPropChanged: function(key, value){
+            cacheManager.changeCache(CacheManager.SettingCache, key, value)
+        }
     }
 
     NetworkHelper{
+        id: networkHelper
         anchors.leftMargin: 20
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.left: sidebar.right
         anchors.right: parent.right
         visible: root.pageIndex === 1
+        onPropChanged: function(key, value){
+            cacheManager.changeCache(CacheManager.SocketCache, key, value)
+        }
     }
 }

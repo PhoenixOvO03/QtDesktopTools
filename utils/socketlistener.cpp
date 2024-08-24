@@ -26,7 +26,7 @@ void SocketListener::start(SocketType socketType, QString ip, QString port)
         m_tcpServer = new QTcpServer(this);
 
         connect(m_tcpServer, &QTcpServer::newConnection, this, [&](){
-            emit recvData("客户端连接成功");
+            emit recvData("客户端连接");
             QTcpSocket* client = m_tcpServer->nextPendingConnection();
             int index = m_clientList.length();
             m_clientList.append(client);
@@ -43,7 +43,7 @@ void SocketListener::start(SocketType socketType, QString ip, QString port)
     case SocketType::TCPClient:
         m_tcpSocket = new QTcpSocket(this);
         connect(m_tcpSocket, &QTcpSocket::connected, this, [&](){
-            emit recvData("成功和服务器建立好连接");
+            emit recvData("服务器连接成功");
         });
 
         connect(m_tcpSocket, &QTcpSocket::readyRead, this, [&](){
