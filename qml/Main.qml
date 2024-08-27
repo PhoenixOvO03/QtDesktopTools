@@ -1,53 +1,76 @@
 
 import QtQuick
 
-import ten.util.CacheManager
+Rectangle {
+    signal close()
 
-Rectangle{
     property int pageIndex: 0
+    property string theme: "dark"
 
     id: root
-    color: "#c0444444"
+    color: "transparent"
 
-    Component.onCompleted: {
-        var settingCache = cacheManager.settingCache()
-        keyListenerSettingPage.backgroundColor = settingCache['backgroundColor']
-        keyListenerSettingPage.keyColor =  settingCache['keyColor']
-        keyListenerSettingPage.textColor = settingCache['textColor']
-        keyListenerSettingPage.stayTime = settingCache['stayTime']
-        keyListenerSettingPage.locationIndex = settingCache['locationIndex']
-
-        var socketCache = cacheManager.socketCache()
-        networkHelper.ip = socketCache['ip']
-        networkHelper.port = socketCache['port']
-    }
-
-    CacheManager{
-        id: cacheManager
-    }
-
-    Rectangle{
+    Rectangle{ // 侧边栏
         id: sidebar
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        width: 50
-        radius: 25
-        color: "#40C0C0C0"
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 50
+        color: "#10000000"
 
-        ListView{
+        Image { // icon
+            id: icon
+            width: 50
+            height: 50
+            source: root.theme === "dark" ? "qrc:/res/ten_OvO.png" : "qrc:/res/ten_OvO_black.png"
+        }
+
+        Image { // Github主页
+            id: github
+            width: 25
+            height: 25
+            anchors.left: icon.right
+            anchors.top: parent.top
+            source: root.theme === "dark" ? "qrc:/res/github.png" : "qrc:/res/github_black.png"
+
+            MouseArea{
+                anchors.fill: parent
+                onClicked: Qt.openUrlExternally("https://github.com/PhoenixOvO03")
+            }
+        }
+
+        Image { // B站主页
+            id: bilibili
+            width: 25
+            height: 25
+            anchors.left: icon.right
+            anchors.bottom: parent.bottom
+            source: root.theme === "dark" ? "qrc:/res/bilibili.png" : "qrc:/res/bilibili_black.png"
+
+            MouseArea{
+                anchors.fill: parent
+                onClicked: Qt.openUrlExternally("https://space.bilibili.com/387426555")
+            }
+        }
+
+        ListView{ // 侧边栏列表
             id: sideList
-            anchors.fill: parent
+            anchors.left: github.right
+            anchors.right: closeBtn.left
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
             clip: true
             interactive: false // 禁止滑动
+            orientation: ListView.Horizontal
+
             model: ListModel{
-                ListElement{imageUrl: "qrc:/res/key.png"}
-                ListElement{imageUrl: "qrc:/res/web.png"}
+                ListElement{imageName: "key"}
+                ListElement{imageName: "web"}
             }
 
             delegate: Image{
                 width: 50
                 height: 50
-                source: imageUrl
+                source: "qrc:res/" + imageName + (root.theme === "dark" ? ".png" : "_black.png")
 
                 MouseArea{
                     anchors.fill: parent
@@ -58,62 +81,61 @@ Rectangle{
                 }
             }
 
-            highlight: Rectangle{
-                color: "#40ffffff"
-                radius: 25
-            }
+            highlight: Rectangle{color: "#20ffffff"}
         }
 
-        Image {
-            id: github
+        Image{ // 主题切换按钮
+            id: themeSwitch
             width: 50
             height: 50
-            anchors.bottom: bilibili.top
-            source: "qrc:/res/github.png"
+            anchors.right: closeBtn.left
+            source: root.theme === "dark" ? "qrc:/res/moon.png" : "qrc:/res/sun.png"
 
             MouseArea{
                 anchors.fill: parent
-                onClicked: Qt.openUrlExternally("https://github.com/PhoenixOvO03")
+                onClicked: {
+                    if (root.theme === "dark") root.theme = "light"
+                    else root.theme = "dark"
+                }
             }
         }
 
-        Image {
-            id: bilibili
+        Image{ // 关闭按钮
+            id: closeBtn
+            anchors.right: parent.right
             width: 50
             height: 50
-            anchors.bottom: parent.bottom
-            source: "qrc:/res/bilibili.png"
+            source: root.theme === "dark" ? "qrc:/res/close.png" : "qrc:/res/close_black.png"
 
             MouseArea{
                 anchors.fill: parent
-                onClicked: Qt.openUrlExternally("https://space.bilibili.com/387426555")
+                onClicked: root.close()
             }
         }
     }
 
-    KeyListenerSettingPage{
-        id: keyListenerSettingPage
+    Rectangle { // 页面
+        id: page
+        color: "transparent"
         anchors.leftMargin: 20
-        anchors.top: parent.top
+        anchors.topMargin: 20
+        anchors.top: sidebar.bottom
         anchors.bottom: parent.bottom
-        anchors.left: sidebar.right
         anchors.right: parent.right
-        visible: root.pageIndex === 0
-        onPropChanged: function(key, value){
-            cacheManager.changeCache(CacheManager.SettingCache, key, value)
-        }
-    }
+        anchors.left: parent.left
 
-    NetworkHelper{
-        id: networkHelper
-        anchors.leftMargin: 20
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.left: sidebar.right
-        anchors.right: parent.right
-        visible: root.pageIndex === 1
-        onPropChanged: function(key, value){
-            cacheManager.changeCache(CacheManager.SocketCache, key, value)
+        KeyListenerSettingPage{
+            id: keyListenerSettingPage
+            anchors.fill: parent
+            visible: root.pageIndex === 0
+            theme: root.theme
+        }
+
+        NetworkHelper{
+            id: networkHelper
+            anchors.fill: parent
+            visible: root.pageIndex === 1
+            theme: root.theme
         }
     }
 }

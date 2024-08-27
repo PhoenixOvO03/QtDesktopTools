@@ -6,5 +6,13 @@
         <file>res/ten_OvO.png</file>
         <file>res/key.png</file>
         <file>res/github.png</file>
+        <file>res/close_black.png</file>
+        <file>res/bilibili_black.png</file>
+        <file>res/web_black.png</file>
+        <file>res/ten_OvO_black.png</file>
+        <file>res/key_black.png</file>
+        <file>res/github_black.png</file>
+        <file>res/moon.png</file>
+        <file>res/sun.png</file>
     </qresource>
 </RCC>

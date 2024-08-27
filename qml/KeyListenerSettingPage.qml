@@ -1,8 +1,9 @@
+
 import QtQuick
 
-Item {
-    signal propChanged(string property, var value)
+import ten.util.CacheManager
 
+Item {
     property var showKeyObject: null
     property color backgroundColor: "#80808080"
     property color keyColor: "#80C0C0C0"
@@ -10,6 +11,7 @@ Item {
     property int colorIndex: 0
     property int stayTime: 3000
     property int locationIndex: 6
+    property string theme: "dark"
 
     // 属性修改信号
     onBackgroundColorChanged: setProgressBar("backgroundColor", backgroundColor)
@@ -19,7 +21,7 @@ Item {
     onLocationIndexChanged: setProgressBar("locationIndex", locationIndex)
 
     function setProgressBar(key, value){
-        propChanged(key, value)
+        cacheManager.changeCache(key, value)
         if (key === "stayTime"){
             timeSlider.value = value
             return
@@ -27,7 +29,6 @@ Item {
         if (colorIndex === 0){
             keyBtn.isChecked = false
             textBtn.isChecked = false
-            root.colorIndex = 0
             redSlider.value = root.backgroundColor.r * 255
             greenSlider.value = root.backgroundColor.g * 255
             blueSlider.value = root.backgroundColor.b * 255
@@ -36,7 +37,6 @@ Item {
         if (colorIndex === 1){
             backBtn.isChecked = false
             textBtn.isChecked = false
-            root.colorIndex = 1
             redSlider.value = root.keyColor.r * 255
             greenSlider.value = root.keyColor.g * 255
             blueSlider.value = root.keyColor.b * 255
@@ -45,7 +45,6 @@ Item {
         if (colorIndex === 2){
             backBtn.isChecked = false
             keyBtn.isChecked = false
-            root.colorIndex = 2
             redSlider.value = root.textColor.r * 255
             greenSlider.value = root.textColor.g * 255
             blueSlider.value = root.textColor.b * 255
@@ -59,6 +58,19 @@ Item {
     }
 
     id: root
+
+    Component.onCompleted: {
+        var settingCache = cacheManager.loadCache(CacheManager.SettingCache)
+        root.backgroundColor = settingCache['backgroundColor']
+        root.keyColor =  settingCache['keyColor']
+        root.textColor = settingCache['textColor']
+        root.stayTime = settingCache['stayTime']
+        root.locationIndex = settingCache['locationIndex']
+    }
+
+    CacheManager{
+        id: cacheManager
+    }
 
     Column{
         spacing: 20
@@ -140,7 +152,7 @@ Item {
                     Text {
                         text: content
                         anchors.centerIn: parent
-                        color: "black"
+                        color: root.theme === "dark" ? "white" : "black"
                         font.pixelSize: 15
                     }
 
@@ -289,6 +301,7 @@ Item {
                 width: 50
                 height: 20
                 content: "0"
+                allColor: root.theme === "dark" ? "#80ffffff" : "#80000000"
                 onContentChanged: {
                     if (content === "") content = "0"
                     if (content > 255) content = 255
@@ -328,6 +341,7 @@ Item {
                 width: 50
                 height: 20
                 content: "0"
+                allColor: root.theme === "dark" ? "#80ffffff" : "#80000000"
                 onContentChanged: {
                     if (content === "") content = "0"
                     if (content > 255) content = 255
@@ -367,6 +381,7 @@ Item {
                 width: 50
                 height: 20
                 content: "0"
+                allColor: root.theme === "dark" ? "#80ffffff" : "#80000000"
                 onContentChanged: {
                     if (content === "") content = "0"
                     if (content > 255) content = 255
@@ -406,6 +421,7 @@ Item {
                 width: 50
                 height: 20
                 content: "0"
+                allColor: root.theme === "dark" ? "#80ffffff" : "#80000000"
                 onContentChanged: {
                     if (content === "") content = "0"
                     if (content > 255) content = 255
@@ -443,6 +459,7 @@ Item {
                 width: 50
                 height: 20
                 content: timeSlider.value
+                allColor: root.theme === "dark" ? "#80ffffff" : "#80000000"
                 onContentChanged: {
                     if (content === "") content = "0"
                     if (content > 5000) content = 5000

@@ -38,6 +38,8 @@ void SocketListener::start(SocketType socketType, QString ip, QString port)
         m_tcpServer->listen(QHostAddress(ip), port.toUInt());
         if (m_tcpServer->isListening())
             emit recvData("开始监听");
+        else
+            emit recvData("监听失败");
         break;
 
     case SocketType::TCPClient:

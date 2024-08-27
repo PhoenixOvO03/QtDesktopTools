@@ -7,36 +7,91 @@
 CacheManager::CacheManager(QObject *parent)
     : QObject{parent}
 {
-    chechkCache();
-    loadCache();
+    m_cacheType = CacheType::NoCache; // 默认缓存类型为无缓存
 }
 
-void CacheManager::changeCache(CacheType type, QString key, QJsonValue value)
+QJsonObject CacheManager::loadCache(CacheType type)
 {
-    // qDebug() << type << " " << key << " " << value;
-    switch (type)
+    chechkCache();
+    m_cacheType = type; // 设置缓存类型
+    
+    switch (m_cacheType)
     {
-    case CacheType::SettingCache:
+    case CacheType::SettingCache: // 加载setting缓存
     {
-        m_settingCache[key] = value;
+        QFile settingFile(QCoreApplication::applicationDirPath() + "/cache/setting.json");
+        if (settingFile.open(QFile::ReadOnly))
+        {
+            m_jsonDoc = QJsonDocument::fromJson(settingFile.readAll());
+            m_cache = m_jsonDoc.object();
+        }
+        settingFile.close();
         break;
     }
-    case CacheType::SocketCache:
+    case CacheType::SocketCache: // 加载socket缓存
     {
-        m_socketCache[key] = value;
+        QFile socketFile(QCoreApplication::applicationDirPath() + "/cache/socket.json");
+        if (socketFile.open(QFile::ReadOnly))
+        {
+            m_jsonDoc = QJsonDocument::fromJson(socketFile.readAll());
+            m_cache = m_jsonDoc.object();
+        }
+        socketFile.close();
         break;
     }
     default:
         break;
     }
-    saveCache(type);
+
+    return m_cache;
+}
+
+void CacheManager::changeCache(QString key, QJsonValue value)
+{
+    m_cache[key] = value;
+    
+    switch (m_cacheType)
+    {
+    case CacheType::SettingCache: // 保存setting缓存
+    {
+        m_jsonDoc.setObject(m_cache);
+        QFile settingFile(QCoreApplication::applicationDirPath() + "/cache/setting.json");
+        if (!settingFile.open(QFile::WriteOnly))
+        {
+            qDebug() << settingFile.error();
+            return;
+        }
+        QTextStream settingWirteStream(&settingFile);
+        settingWirteStream.setEncoding(QStringConverter::Utf8); // 设置编码 UTF8
+        settingWirteStream << m_jsonDoc.toJson();               // 写入文件
+        settingFile.close();
+        break;
+    }
+    case CacheType::SocketCache: // 保存socket缓存
+    {
+        m_jsonDoc.setObject(m_cache);
+        QFile socketFile(QCoreApplication::applicationDirPath() + "/cache/socket.json");
+        if (!socketFile.open(QFile::WriteOnly))
+        {
+            qDebug() << socketFile.error();
+            return;
+        }
+        QTextStream socketWirteStream(&socketFile);
+        socketWirteStream.setEncoding(QStringConverter::Utf8); // 设置编码 UTF8
+        socketWirteStream << m_jsonDoc.toJson();               // 写入文件
+        socketFile.close();
+        break;
+    }
+    default:
+        break;
+    }
 }
 
 void CacheManager::chechkCache()
 {
     QString dirPath = QCoreApplication::applicationDirPath() + "/cache"; // 缓存文件夹路径
-    QString settingFilePath = dirPath + "/setting.json";                 // setting缓存文件路径
-    QString SocketCachePath = dirPath + "/socket.json";                  // socket缓存文件路径
+    QString settingFilePath = dirPath + "/setting.json"; // setting缓存文件路径
+    QString SocketCachePath = dirPath + "/socket.json"; // socket缓存文件路径
 
     QDir dir;
     if (!dir.exists(dirPath)) // 如果缓存文件夹路径不存在则创建
@@ -68,65 +123,5 @@ void CacheManager::chechkCache()
         file.open(QFile::WriteOnly);
         file.write(data);
         file.close();
-    }
-}
-
-void CacheManager::loadCache()
-{
-    // 加载setting缓存
-    QFile settingFile(QCoreApplication::applicationDirPath() + "/cache/setting.json");
-    if (settingFile.open(QFile::ReadOnly))
-    {
-        m_jsonDoc = QJsonDocument::fromJson(settingFile.readAll());
-        m_settingCache = m_jsonDoc.object();
-    }
-    settingFile.close();
-
-    // 加载socket缓存
-    QFile socketFile(QCoreApplication::applicationDirPath() + "/cache/socket.json");
-    if (socketFile.open(QFile::ReadOnly))
-    {
-        m_jsonDoc = QJsonDocument::fromJson(socketFile.readAll());
-        m_socketCache = m_jsonDoc.object();
-    }
-    socketFile.close();
-}
-
-void CacheManager::saveCache(CacheType type)
-{
-    switch (type)
-    {
-    case CacheType::SettingCache: // 保存setting缓存
-    {
-        m_jsonDoc.setObject(m_settingCache);
-        QFile settingFile(QCoreApplication::applicationDirPath() + "/cache/setting.json");
-        if (!settingFile.open(QFile::WriteOnly))
-        {
-            qDebug() << settingFile.error();
-            return;
-        }
-        QTextStream settingWirteStream(&settingFile);
-        settingWirteStream.setEncoding(QStringConverter::Utf8); // 设置编码 UTF8
-        settingWirteStream << m_jsonDoc.toJson();               // 写入文件
-        settingFile.close();
-        break;
-    }
-    case CacheType::SocketCache: // 保存socket缓存
-    {
-        m_jsonDoc.setObject(m_socketCache);
-        QFile socketFile(QCoreApplication::applicationDirPath() + "/cache/socket.json");
-        if (!socketFile.open(QFile::WriteOnly))
-        {
-            qDebug() << socketFile.error();
-            return;
-        }
-        QTextStream socketWirteStream(&socketFile);
-        socketWirteStream.setEncoding(QStringConverter::Utf8); // 设置编码 UTF8
-        socketWirteStream << m_jsonDoc.toJson();               // 写入文件
-        socketFile.close();
-        break;
-    }
-    default:
-        break;
     }
 }

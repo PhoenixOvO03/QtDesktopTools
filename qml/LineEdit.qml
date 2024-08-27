@@ -4,12 +4,13 @@ import QtQuick
 
 Rectangle {
     property string content: ""
+    property color allColor: "#80ffffff"
     onContentChanged: textInput.text = root.content
 
     id: root
     radius: height / 2
-    color: "#80444444"
-    border.color: "#80ffffff"
+    color: "transparent"
+    border.color: root.allColor
 
     // 输入框
     TextInput{
@@ -17,7 +18,7 @@ Rectangle {
         anchors.fill: parent
         font.pixelSize: height * 0.5
         font.family: "华文彩云"
-        color: "white"
+        color: root.allColor
         verticalAlignment: Qt.AlignVCenter
         horizontalAlignment: Qt.AlignHCenter
         clip: true

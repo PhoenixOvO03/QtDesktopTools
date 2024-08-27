@@ -2,13 +2,14 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Controls.Basic
+
 import ten.util.SocketListener
+import ten.util.CacheManager
 
 Item{
-    signal propChanged(string key, var value)
-
     property string ip: "127.0.0.1"
     property int port: 8080
+    property string theme: "dark"
 
     onIpChanged: setConfig("ip", ip)
     onPortChanged: setConfig("port", port)
@@ -16,10 +17,20 @@ Item{
     function setConfig(key, value){
         ipEdit.content = ip
         portEdit.content = port
-        propChanged(key, value)
+        cacheManager.changeCache(key, value)
     }
 
     id: root
+
+    Component.onCompleted: {
+        var socketCache = cacheManager.loadCache(CacheManager.SocketCache)
+        root.ip = socketCache['ip']
+        root.port = socketCache['port']
+    }
+
+    CacheManager{
+        id: cacheManager
+    }
 
     SocketListener{
         id: socket
@@ -36,7 +47,7 @@ Item{
 
             Text{
                 text: "类型"
-                color: "#80ffffff"
+                color: root.theme === "dark" ? "#80ffffff" : "#80000000"
                 font.pixelSize: 20
                 anchors.verticalCenter: parent.verticalCenter
             }
@@ -48,13 +59,13 @@ Item{
                 model: ["TCP Server", "TCP Client"]
                 background: Rectangle {
                     color: "transparent"
-                    border.color: "#80ffffff"
+                    border.color: root.theme === "dark" ? "#80ffffff" : "#80000000"
                     radius: 10
                 }
                 contentItem: Text { // 当前显示内容
                     leftPadding: 10
                     text: serverType.displayText
-                    color: "#80ffffff"
+                    color: root.theme === "dark" ? "#80ffffff" : "#80000000"
                     verticalAlignment: Text.AlignVCenter
                 }
                 delegate: ItemDelegate { // 下拉框选项
@@ -92,7 +103,7 @@ Item{
 
             Text{
                 text: "IP地址"
-                color: "#80ffffff"
+                color: root.theme === "dark" ? "#80ffffff" : "#80000000"
                 font.pixelSize: 20
                 anchors.verticalCenter: parent.verticalCenter
             }
@@ -102,12 +113,13 @@ Item{
                 width: 200
                 height: 40
                 content: root.ip
+                allColor: root.theme === "dark" ? "#80ffffff" : "#80000000"
                 onContentChanged: root.ip = content
             }
 
             Text{
                 text: "端口号"
-                color: "#80ffffff"
+                color: root.theme === "dark" ? "#80ffffff" : "#80000000"
                 font.pixelSize: 20
                 anchors.verticalCenter: parent.verticalCenter
             }
@@ -117,6 +129,7 @@ Item{
                 width: 100
                 height: 40
                 content: root.port
+                allColor: root.theme === "dark" ? "#80ffffff" : "#80000000"
                 onContentChanged: root.port = content
             }
         }
@@ -127,16 +140,16 @@ Item{
             height: 250
             background: Rectangle{
                 radius: 10
-                color: "#80444444"
-                border.color: "#80ffffff"
+                color: "transparent"
+                border.color: root.theme === "dark" ? "#80ffffff" : "#80000000"
             }
 
             TextArea {
                 id: historyArea
                 placeholderText: "暂无内容..."
-                placeholderTextColor: "#80ffffff"
+                placeholderTextColor: root.theme === "dark" ? "#80ffffff" : "#80000000"
                 wrapMode: TextArea.Wrap
-                color: "white"
+                color: root.theme === "dark" ? "white" : "black"
                 readOnly: true
 
                 ClickBtn{
@@ -160,16 +173,16 @@ Item{
                 height: 50
                 background: Rectangle{
                     radius: 10
-                    color: "#80444444"
-                    border.color: "#80ffffff"
+                    color: "transparent"
+                    border.color: root.theme === "dark" ? "#80ffffff" : "#80000000"
                 }
 
                 TextArea {
                     id: inputArea
                     placeholderText: "在此输入..."
-                    placeholderTextColor: "#80ffffff"
+                    placeholderTextColor: root.theme === "dark" ? "#80ffffff" : "#80000000"
                     wrapMode: TextArea.Wrap
-                    color: "white"
+                    color: root.theme === "dark" ? "white" : "black"
                 }
             }
 
@@ -180,7 +193,6 @@ Item{
                 btnColor: "green"
                 onClicked: {
                     if (startBtn.isStart) {
-                        // historyArea.text = inputArea.text + "\n" + historyArea.text
                         socket.sendData(inputArea.text)
                     }
                 }
