@@ -1,13 +1,13 @@
-#include "mainwindow.h"
-#include "./ui_mainwindow.h"
+#include "src/mainwindow.h"
+#include "src/ui_mainwindow.h"
 #include "utils/compositionwindoweffect.h"
 
 #include <QMouseEvent>
 #include <QMenu>
 #include <QSystemTrayIcon>
-#include <QMessageBox>
-#include <QFile>
 #include <QQuickItem>
+#include <QFile>
+#include <QJsonObject>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -22,6 +22,19 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::setTheme(QString topLeft, QString bottomRight, QString theme, int index)
+{
+    m_themeCache.changeCache("topLeft", topLeft);
+    m_themeCache.changeCache("bottomRight", bottomRight);
+    m_themeCache.changeCache("theme", theme);
+    m_themeCache.changeCache("index", index);
+    QFile qssFile(":/qss/MainWindow.qss");
+    if(qssFile.open(QFile::ReadOnly)){
+        setStyleSheet(QString(qssFile.readAll()).arg(topLeft).arg(bottomRight));
+    }
+    qssFile.close();
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *e)
@@ -81,14 +94,15 @@ void MainWindow::uiInit()
     ui->quickWidget->setSource(QUrl("qrc:/qml/Main.qml"));
 
     QQuickItem* item = ui->quickWidget->rootObject();
+    QJsonObject theme = m_themeCache.loadCache(CacheManager::ThemeCache); // 加载主题缓存
+    setTheme(theme.value("topLeft").toString(),
+            theme.value("bottomRight").toString(),
+            theme.value("theme").toString(),
+            theme.value("index").toInt()); // 设置主题
+    item->setProperty("theme", theme.value("theme").toString()); // 设置主题
+    item->setProperty("skinIndex", theme.value("index").toInt()); // 设置皮肤索引
     connect(item, SIGNAL(close()), this, SLOT(close()));
-
-    // 样式
-    QFile qssFile(":/qss/MainWindow.qss");
-    if(qssFile.open(QFile::ReadOnly)){
-        setStyleSheet(qssFile.readAll());
-    }
-    qssFile.close();
+    connect(item, SIGNAL(skinChanged(QString, QString, QString, int)), this, SLOT(setTheme(QString, QString, QString, int)));
 
     // 窗口
     setFixedSize(550, 500);

@@ -12,7 +12,8 @@ public:
     enum CacheType{
         NoCache,
         SettingCache,
-        SocketCache
+        SocketCache,
+        ThemeCache
     };
     Q_ENUM(CacheType)
 
@@ -33,6 +34,8 @@ private:
     CacheType m_cacheType; // 缓存类型
     QJsonDocument m_jsonDoc; // json文档
     QJsonObject m_cache; // 缓存
+    QString m_cacheFilePath; // 缓存路径
+    QString m_defaltCacheFilePath; // 默认缓存路径
 };
 
 #endif // CACHEMANAGER_H

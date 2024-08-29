@@ -14,5 +14,7 @@
         <file>res/github_black.png</file>
         <file>res/moon.png</file>
         <file>res/sun.png</file>
+        <file>res/skin.png</file>
+        <file>res/skin_black.png</file>
     </qresource>
 </RCC>

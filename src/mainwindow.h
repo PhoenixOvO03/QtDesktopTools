@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "utils/cachemanager.h" // 缓存管理
+
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
@@ -19,6 +21,9 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+public slots:
+    void setTheme(QString topLeft, QString bottomRight, QString theme, int index); // 设置背景渐变颜色
+
 protected:
     // 拖动窗口
     void mousePressEvent(QMouseEvent *e);
@@ -32,7 +37,7 @@ private:
     Ui::MainWindow *ui;
 
     QPoint m_pressPos; // 鼠标按下位置
-
     QSystemTrayIcon* m_trayIcon; // 托盘图标
+    CacheManager m_themeCache; // 主题缓存管理
 };
 #endif // MAINWINDOW_H

@@ -13,8 +13,8 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Quick QuickWidgets Net
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Quick QuickWidgets Network)
 
 set(PROJECT_SOURCES
-        main.cpp
-        mainwindow.h mainwindow.cpp mainwindow.ui
+        src/main.cpp
+        src/mainwindow.h src/mainwindow.cpp src/mainwindow.ui
         utils/keyboardlistener.h utils/keyboardlistener.cpp
         utils/socketlistener.h utils/socketlistener.cpp
         utils/compositionwindoweffect.h utils/compositionwindoweffect.cpp
@@ -67,8 +67,8 @@ set_target_properties(QtDesktopTools PROPERTIES
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
     # 日志打印到控制台 为OFF 取消为ON
-    WIN32_EXECUTABLE ON
-    # WIN32_EXECUTABLE OFF
+    # WIN32_EXECUTABLE ON
+    WIN32_EXECUTABLE OFF
 )
 
 include(GNUInstallDirs)

@@ -12,37 +12,41 @@ CacheManager::CacheManager(QObject *parent)
 
 QJsonObject CacheManager::loadCache(CacheType type)
 {
-    chechkCache();
     m_cacheType = type; // 设置缓存类型
     
-    switch (m_cacheType)
+    switch (m_cacheType) // 设置路径
     {
-    case CacheType::SettingCache: // 加载setting缓存
+    case CacheType::SettingCache:
     {
-        QFile settingFile(QCoreApplication::applicationDirPath() + "/cache/setting.json");
-        if (settingFile.open(QFile::ReadOnly))
-        {
-            m_jsonDoc = QJsonDocument::fromJson(settingFile.readAll());
-            m_cache = m_jsonDoc.object();
-        }
-        settingFile.close();
+        m_cacheFilePath = QCoreApplication::applicationDirPath() + "/cache/setting.json";
+        m_defaltCacheFilePath = ":/cache/setting.json";
         break;
     }
-    case CacheType::SocketCache: // 加载socket缓存
+    case CacheType::SocketCache:
     {
-        QFile socketFile(QCoreApplication::applicationDirPath() + "/cache/socket.json");
-        if (socketFile.open(QFile::ReadOnly))
-        {
-            m_jsonDoc = QJsonDocument::fromJson(socketFile.readAll());
-            m_cache = m_jsonDoc.object();
-        }
-        socketFile.close();
+        m_cacheFilePath = QCoreApplication::applicationDirPath() + "/cache/socket.json";
+        m_defaltCacheFilePath = ":/cache/socket.json";
+        break;
+    }
+    case CacheType::ThemeCache:
+    {
+        m_cacheFilePath = QCoreApplication::applicationDirPath() + "/cache/theme.json";
+        m_defaltCacheFilePath = ":/cache/theme.json";
         break;
     }
     default:
+        return m_cache;
         break;
     }
 
+    chechkCache(); // 检查缓存文件是否存在
+    QFile socketFile(m_cacheFilePath);  // 加载缓存
+    if (socketFile.open(QFile::ReadOnly))
+    {
+        m_jsonDoc = QJsonDocument::fromJson(socketFile.readAll());
+        m_cache = m_jsonDoc.object();
+    }
+    socketFile.close();
     return m_cache;
 }
 
@@ -53,24 +57,11 @@ void CacheManager::changeCache(QString key, QJsonValue value)
     switch (m_cacheType)
     {
     case CacheType::SettingCache: // 保存setting缓存
-    {
-        m_jsonDoc.setObject(m_cache);
-        QFile settingFile(QCoreApplication::applicationDirPath() + "/cache/setting.json");
-        if (!settingFile.open(QFile::WriteOnly))
-        {
-            qDebug() << settingFile.error();
-            return;
-        }
-        QTextStream settingWirteStream(&settingFile);
-        settingWirteStream.setEncoding(QStringConverter::Utf8); // 设置编码 UTF8
-        settingWirteStream << m_jsonDoc.toJson();               // 写入文件
-        settingFile.close();
-        break;
-    }
     case CacheType::SocketCache: // 保存socket缓存
+    case CacheType::ThemeCache: // 保存theme缓存
     {
         m_jsonDoc.setObject(m_cache);
-        QFile socketFile(QCoreApplication::applicationDirPath() + "/cache/socket.json");
+        QFile socketFile(m_cacheFilePath);
         if (!socketFile.open(QFile::WriteOnly))
         {
             qDebug() << socketFile.error();
@@ -90,31 +81,15 @@ void CacheManager::changeCache(QString key, QJsonValue value)
 void CacheManager::chechkCache()
 {
     QString dirPath = QCoreApplication::applicationDirPath() + "/cache"; // 缓存文件夹路径
-    QString settingFilePath = dirPath + "/setting.json"; // setting缓存文件路径
-    QString SocketCachePath = dirPath + "/socket.json"; // socket缓存文件路径
 
     QDir dir;
     if (!dir.exists(dirPath)) // 如果缓存文件夹路径不存在则创建
         dir.mkpath(dirPath);
 
-    if (!QFile::exists(settingFilePath)) // 如果setting缓存文件不存在则复制
+    if (!QFile::exists(m_cacheFilePath)) // 如果缓存文件不存在则复制
     {
-        QFile file(settingFilePath);
-        QFile defaultFile(":/cache/setting.json");
-
-        defaultFile.open(QFile::ReadOnly);
-        QByteArray data = defaultFile.readAll();
-        defaultFile.close();
-
-        file.open(QFile::WriteOnly);
-        file.write(data);
-        file.close();
-    }
-
-    if (!QFile::exists(SocketCachePath)) // 如果socket缓存文件不存在则复制
-    {
-        QFile file(SocketCachePath);
-        QFile defaultFile(":/cache/socket.json");
+        QFile file(m_cacheFilePath);
+        QFile defaultFile(m_defaltCacheFilePath);
 
         defaultFile.open(QFile::ReadOnly);
         QByteArray data = defaultFile.readAll();

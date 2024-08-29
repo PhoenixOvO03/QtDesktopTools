@@ -1,6 +1,6 @@
 # QtDesktopTools
 
-使用Qt开发windows桌面小工具集合
+使用Qt6开发windows桌面小工具集合
 
 B站UP：[十_OvO](https://space.bilibili.com/387426555)自制
 
@@ -10,8 +10,17 @@ B站UP：[十_OvO](https://space.bilibili.com/387426555)自制
 + 监听键盘按键显示设置界面
 + 网络调试助手
 + 本地缓存
++ 主题设置
 
 # 更新历程
+
+## V 0.3.1
+
++ 增加皮肤设置页面
+  + 设置背景渐变颜色
+  + 当前选择高亮
+  + 皮肤跟随主题修改
+  + 增加缓存功能
 
 ## V 0.2.3
 
