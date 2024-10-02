@@ -8,7 +8,7 @@
 + 编译器：MinGW 64-bit 11.2.0
 + 操作系统：Windows 10
 
-## 软件效果
+## 软件效果预览
 
 ![QtDesktopTools](https://raw.githubusercontent.com/PhoenixOvO03/blog_image/main/QtDesktopTools_0_4_1.png)
 
