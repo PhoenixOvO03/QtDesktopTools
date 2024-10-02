@@ -1,11 +1,11 @@
-#include "src/mainwindow.h"
-
-#include <QApplication>
-#include <QQuickWidget>
+#include "src/desktopwidget.h"
 
 #include "utils/keyboardlistener.h"
 #include "utils/socketlistener.h"
 #include "utils/cachemanager.h"
+
+#include <QApplication>
+#include <QQuickWidget>
 
 int main(int argc, char *argv[])
 {
@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<CacheManager>("ten.util.CacheManager", 1, 0, "CacheManager");
     
     QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+    DesktopWidget w;
+    w.showMaximized();
     return a.exec();
 }

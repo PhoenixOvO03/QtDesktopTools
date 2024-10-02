@@ -1,6 +1,8 @@
 {
     "theme": "dark",
-    "topLeft": "#c0604962",
-    "bottomRight": "#c00C1824",
-    "index": 0
+    "skinIndex": 0,
+    "backLeftLight": "#FFF3FF",
+    "backRightLight": "#D8EAFF",
+    "backLeftDark": "#604962",
+    "backRightDark": "#0C1824"
 }

@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <windows.h>
-#include <Qstring>
+#include <QString>
 #include <QList>
 
 class KeyboardListener : public QObject

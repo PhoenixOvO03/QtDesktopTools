@@ -11,25 +11,18 @@ Item{
     property int port: 8080
     property string theme: "dark"
 
-    onIpChanged: setConfig("ip", ip)
-    onPortChanged: setConfig("port", port)
-
-    function setConfig(key, value){
-        ipEdit.content = ip
-        portEdit.content = port
-        cacheManager.changeCache(key, value)
-    }
+    onIpChanged: cacheManager.changeCache("ip", ip)
+    onPortChanged: cacheManager.changeCache("port", port)
 
     id: root
 
-    Component.onCompleted: {
-        var socketCache = cacheManager.loadCache(CacheManager.SocketCache)
-        root.ip = socketCache['ip']
-        root.port = socketCache['port']
-    }
-
     CacheManager{
         id: cacheManager
+        Component.onCompleted: {
+            var socketCache = cacheManager.loadCache('socket.json')
+            root.ip = socketCache['ip']
+            root.port = socketCache['port']
+        }
     }
 
     SocketListener{
@@ -79,18 +72,22 @@ Item{
                 }
             }
 
-            ClickBtn{ // 开始 停止
+            Button{ // 开始 停止
                 property bool isStart: false
 
                 id: startBtn
+                text: isStart ? "停止" : "开始"
                 width: 150
                 height: 40
-                btnText: isStart ? "停止" : "开始"
-                btnColor: isStart ? "red" : "green"
+                background: Rectangle {
+                    radius: height / 2
+                    color: startBtn.isStart ? "red" : "green"
+                    border.color: Qt.lighter(color)
+                }
                 onClicked: {
                     isStart = !isStart
                     if (isStart){
-                        socket.start(serverType.currentIndex, ipEdit.content, portEdit.content)
+                        socket.start(serverType.currentIndex, root.ip, root.port)
                     }else{
                         socket.stop()
                     }
@@ -108,13 +105,26 @@ Item{
                 anchors.verticalCenter: parent.verticalCenter
             }
 
-            LineEdit{
-                id: ipEdit
+            Rectangle{
                 width: 200
                 height: 40
-                content: root.ip
-                allColor: root.theme === "dark" ? "#80ffffff" : "#80000000"
-                onContentChanged: root.ip = content
+                radius: height / 2
+                color: "transparent"
+                border.color: root.theme === "dark" ? "#80ffffff" : "#80000000"
+
+                // 输入框
+                TextInput{
+                    id: ipInput
+                    anchors.fill: parent
+                    font.pixelSize: height * 0.5
+                    font.family: "华文彩云"
+                    color: root.theme === "dark" ? "#80ffffff" : "#80000000"
+                    verticalAlignment: Qt.AlignVCenter
+                    horizontalAlignment: Qt.AlignHCenter
+                    clip: true
+                    text: root.ip
+                    onTextChanged: root.ip = text
+                }
             }
 
             Text{
@@ -124,13 +134,26 @@ Item{
                 anchors.verticalCenter: parent.verticalCenter
             }
 
-            LineEdit{
-                id: portEdit
-                width: 100
+            Rectangle{
+                width: 200
                 height: 40
-                content: root.port
-                allColor: root.theme === "dark" ? "#80ffffff" : "#80000000"
-                onContentChanged: root.port = content
+                radius: height / 2
+                color: "transparent"
+                border.color: root.theme === "dark" ? "#80ffffff" : "#80000000"
+
+                // 输入框
+                TextInput{
+                    id: portInput
+                    anchors.fill: parent
+                    font.pixelSize: height * 0.5
+                    font.family: "华文彩云"
+                    color: root.theme === "dark" ? "#80ffffff" : "#80000000"
+                    verticalAlignment: Qt.AlignVCenter
+                    horizontalAlignment: Qt.AlignHCenter
+                    clip: true
+                    text: root.port
+                    onTextChanged: root.port = text
+                }
             }
         }
 
@@ -152,15 +175,19 @@ Item{
                 color: root.theme === "dark" ? "white" : "black"
                 readOnly: true
 
-                ClickBtn{
+                Button{
                     anchors.bottom: parent.bottom
                     anchors.right: parent.right
                     anchors.rightMargin: 10
                     anchors.bottomMargin: 10
                     width:30
                     height:30
-                    btnColor: "red"
                     onClicked: historyArea.text = ""
+                    background: Rectangle{
+                        radius: height / 2
+                        color: "red"
+                        border.color: Qt.lighter(color)
+                    }
                 }
             }
         }
@@ -186,15 +213,19 @@ Item{
                 }
             }
 
-            ClickBtn{
+            Button{
                 width: 150
                 height: 50
-                btnText: "发送"
-                btnColor: "green"
+                text: "发送"
                 onClicked: {
                     if (startBtn.isStart) {
                         socket.sendData(inputArea.text)
                     }
+                }
+                background: Rectangle{
+                    radius: height / 2
+                    color: "green"
+                    border.color: Qt.lighter(color)
                 }
             }
         }

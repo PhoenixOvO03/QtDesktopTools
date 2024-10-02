@@ -9,29 +9,15 @@ class CacheManager : public QObject
 {
     Q_OBJECT
 public:
-    enum CacheType{
-        NoCache,
-        SettingCache,
-        SocketCache,
-        ThemeCache
-    };
-    Q_ENUM(CacheType)
-
-public:
     explicit CacheManager(QObject *parent = nullptr);
 
-    Q_INVOKABLE QJsonObject loadCache(CacheType type); // 加载缓存文件
-
-signals:
-
-public slots:
-    void changeCache(QString key, QJsonValue value); // 修改缓存
+    Q_INVOKABLE QJsonObject loadCache(QString filename); // 加载缓存文件
+    Q_INVOKABLE void changeCache(QString key, QJsonValue value); // 修改缓存
 
 private:
-    void chechkCache(); // 检查缓存文件是否存在
+    void checkCache(); // 检查缓存文件是否存在
 
 private:
-    CacheType m_cacheType; // 缓存类型
     QJsonDocument m_jsonDoc; // json文档
     QJsonObject m_cache; // 缓存
     QString m_cacheFilePath; // 缓存路径

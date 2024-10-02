@@ -5,8 +5,9 @@
         <file>qml/CheckBtn.qml</file>
         <file>qml/SliderProgress.qml</file>
         <file>qml/LineEdit.qml</file>
-        <file>qml/ClickBtn.qml</file>
-        <file>qml/Main.qml</file>
         <file>qml/NetworkHelper.qml</file>
+        <file>qml/DesktopMainWindow.qml</file>
+        <file>qml/Background.qml</file>
+        <file>qml/Sidebar.qml</file>
     </qresource>
 </RCC>

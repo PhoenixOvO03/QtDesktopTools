@@ -1,5 +1,7 @@
 
 import QtQuick
+import QtQuick.Controls
+import QtQuick.Controls.Basic
 
 import ten.util.CacheManager
 
@@ -59,17 +61,16 @@ Item {
 
     id: root
 
-    Component.onCompleted: {
-        var settingCache = cacheManager.loadCache(CacheManager.SettingCache)
-        root.backgroundColor = settingCache['backgroundColor']
-        root.keyColor =  settingCache['keyColor']
-        root.textColor = settingCache['textColor']
-        root.stayTime = settingCache['stayTime']
-        root.locationIndex = settingCache['locationIndex']
-    }
-
     CacheManager{
         id: cacheManager
+        Component.onCompleted: {
+            var settingCache = cacheManager.loadCache('keyListenerSetting.json')
+            root.backgroundColor = settingCache['backgroundColor']
+            root.keyColor =  settingCache['keyColor']
+            root.textColor = settingCache['textColor']
+            root.stayTime = settingCache['stayTime']
+            root.locationIndex = settingCache['locationIndex']
+        }
     }
 
     Column{
@@ -236,13 +237,16 @@ Item {
                 }
             }
 
-            ClickBtn{
-                id: resetBtn
+            Button{ // 重置
                 anchors.bottom: parent.bottom
                 width: 100
                 height: 50
-                btnText: "重置"
-                btnColor: "red"
+                text: "重置"
+                background: Rectangle{
+                    color: "red"
+                    border.color: Qt.lighter(color)
+                    radius: height / 2
+                }
                 onClicked: {
                     root.backgroundColor = "#80808080"
                     root.keyColor = "#80C0C0C0"

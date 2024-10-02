@@ -9,58 +9,42 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Quick QuickWidgets Network)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Quick QuickWidgets Network)
+find_package(Qt6 REQUIRED COMPONENTS
+    Widgets
+    Quick
+    QuickWidgets
+    Network
+)
 
 set(PROJECT_SOURCES
-        src/main.cpp
-        src/mainwindow.h src/mainwindow.cpp src/mainwindow.ui
-        utils/keyboardlistener.h utils/keyboardlistener.cpp
-        utils/socketlistener.h utils/socketlistener.cpp
-        utils/compositionwindoweffect.h utils/compositionwindoweffect.cpp
-        utils/cachemanager.h utils/cachemanager.cpp
+    src/main.cpp
+    # 窗口
+    src/desktopwidget.h src/desktopwidget.cpp
+    # 工具
+    utils/keyboardlistener.h utils/keyboardlistener.cpp
+    utils/socketlistener.h utils/socketlistener.cpp
+    utils/cachemanager.h utils/cachemanager.cpp
 )
 
 INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR}
 )
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(QtDesktopTools
-        MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
-        res.qrc
-        qml.qrc
-        qss.qrc
-        cache.qrc
-        README.md
-    )
-# Define target properties for Android with Qt 6 as:
-#    set_property(TARGET QtDesktopTools APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
-else()
-    if(ANDROID)
-        add_library(QtDesktopTools SHARED
-            ${PROJECT_SOURCES}
-        )
-# Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-    else()
-        add_executable(QtDesktopTools
-            ${PROJECT_SOURCES}
-        )
-    endif()
-endif()
+qt_add_executable(QtDesktopTools
+    MANUAL_FINALIZATION
+    ${PROJECT_SOURCES}
+    res.qrc
+    qml.qrc
+    cache.qrc
+)
 
-target_link_libraries(QtDesktopTools PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt6::Quick Qt6::QuickWidgets Qt6::Network)
+target_link_libraries(QtDesktopTools PRIVATE
+    Qt6::Widgets
+    Qt6::Quick
+    Qt6::QuickWidgets
+    Qt6::Network
+)
 
-# Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
-# If you are developing for iOS or macOS you should consider setting an
-# explicit, fixed bundle identifier manually though.
-if(${QT_VERSION} VERSION_LESS 6.1.0)
-  set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.QtDesktopTools)
-endif()
 set_target_properties(QtDesktopTools PROPERTIES
     ${BUNDLE_ID_OPTION}
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
@@ -78,6 +62,4 @@ install(TARGETS QtDesktopTools
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(QtDesktopTools)
-endif()
+qt_finalize_executable(QtDesktopTools)

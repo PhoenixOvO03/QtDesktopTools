@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>cache/setting.json</file>
+        <file>cache/keyListenerSetting.json</file>
         <file>cache/socket.json</file>
         <file>cache/theme.json</file>
     </qresource>
