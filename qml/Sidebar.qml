@@ -2,21 +2,30 @@
 import QtQuick
 
 ListView{
-    property int pageIndex: -1
     property string theme: "dark"
-    property ListModel sideItems: ListModel{
+
+    id: root
+    height: model.count * 50
+    width: 5
+    clip: true
+    interactive: false // 禁止滑动
+    currentIndex: -1
+    model: ListModel{
         ListElement{imageName: "key"}
         ListElement{imageName: "web"}
         ListElement{imageName: "skin"}
     }
 
-    id: root
-    height: 50
-    clip: true
-    interactive: false // 禁止滑动
-    orientation: ListView.Horizontal
-    currentIndex: root.pageIndex
-    model: sideItems
+    Behavior on width {
+        NumberAnimation {
+            duration: 500
+        }
+    }
+
+    Rectangle{ // 背景
+        anchors.fill: parent
+        color: root.theme === "dark" ? "#40ffffff" : "#40000000"
+    }
 
     delegate: Image{
         width: 50
@@ -25,11 +34,19 @@ ListView{
 
         MouseArea{
             anchors.fill: parent
-            onClicked: root.pageIndex = index
+            onClicked: root.currentIndex = index
         }
     }
 
     highlight: Rectangle{
-        color: root.theme === "dark" ? "#20ffffff" : "#20000000"
+        color: root.theme === "dark" ? "#40ffffff" : "#40000000"
+    }
+
+    MouseArea{ // 进入区域展开侧边栏 离开折叠
+        anchors.fill: parent
+        hoverEnabled: true // 鼠标悬停
+        propagateComposedEvents: true // 事件传播
+        onEntered: root.width = 50
+        onExited: root.width = 5
     }
 }

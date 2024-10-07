@@ -16,5 +16,7 @@
         <file>res/sun.png</file>
         <file>res/skin.png</file>
         <file>res/skin_black.png</file>
+        <file>res/search.png</file>
+        <file>res/search_black.png</file>
     </qresource>
 </RCC>

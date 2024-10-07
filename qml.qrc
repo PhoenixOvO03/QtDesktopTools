@@ -9,5 +9,7 @@
         <file>qml/DesktopMainWindow.qml</file>
         <file>qml/Background.qml</file>
         <file>qml/Sidebar.qml</file>
+        <file>qml/SearchBox.qml</file>
+        <file>qml/SkinSetting.qml</file>
     </qresource>
 </RCC>

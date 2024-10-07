@@ -21,7 +21,6 @@ DesktopWidget::DesktopWidget(QWidget *parent)
     // 折叠数据
     m_fullRect = QGuiApplication::primaryScreen()->availableGeometry(); // 全屏不包含任务栏
     m_foldRect = QRect(m_fullRect.width() - 50, m_fullRect.height() / 2 - 25, 50, 50); // 右方居中
-    m_isFold = false; // 初始状态为展开
     m_foldAnimation = new QPropertyAnimation(this, "geometry"); // 折叠动画
     m_foldAnimation->setDuration(300);
 
@@ -66,6 +65,29 @@ void DesktopWidget::trayIconInit()
     });
 
     m_trayIcon->show();
+}
+
+void DesktopWidget::mousePressEvent(QMouseEvent *event)
+{
+    if (m_isFold && event->button() == Qt::RightButton) // 折叠状态右键开始移动
+    {
+        m_moveEnabled = true;
+        m_startPos = event->globalPosition().toPoint() - frameGeometry().topLeft();
+    }
+}
+
+void DesktopWidget::mouseReleaseEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::RightButton) m_moveEnabled = false;
+}
+
+void DesktopWidget::mouseMoveEvent(QMouseEvent *event)
+{
+    if (m_moveEnabled) // 移动窗口并存储位置
+    {
+        move(event->globalPosition().toPoint() - m_startPos);
+        m_foldRect = geometry();
+    }
 }
 
 void DesktopWidget::onFoldBtnClicked(bool toFold)

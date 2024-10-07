@@ -10,7 +10,7 @@
 
 ## 软件效果预览
 
-![QtDesktopTools](https://raw.githubusercontent.com/PhoenixOvO03/blog_image/main/QtDesktopTools_0_4_1.png)
+![QtDesktopTools](https://raw.githubusercontent.com/PhoenixOvO03/blog_image/main/QtDesktopTools_0_5_1.png)
 
 ## 个人链接
 
